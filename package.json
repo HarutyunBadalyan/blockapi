@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "dev":"nodemon app.js"
+    "dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +17,8 @@
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.4",
     "koa-body": "^4.2.0",
+    "koa-compose": "^4.1.0",
+    "koa-req-validation": "^0.16.0",
     "koa-router": "^10.1.1",
     "nodemailer": "^6.7.3",
     "pg": "^8.7.3",
