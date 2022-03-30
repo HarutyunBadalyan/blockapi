@@ -1,12 +1,10 @@
-const sequelize = require("../../connections/db_connection");
 const {DataTypes} = require("sequelize");
-
-
+const sequelize = require("../../connections/db_connection")
 const {
     Model
 } = require('sequelize');
 
-class Comment extends Model {
+class comment extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -17,14 +15,14 @@ class Comment extends Model {
     }
 }
 
-Comment.init({
+comment.init({
     user_id: DataTypes.INTEGER,
     post_id: DataTypes.INTEGER,
     text: DataTypes.STRING,
-    path: DataTypes.STRING
+    parent_id: DataTypes.STRING
 }, {
     sequelize,
-    modelName: 'Comment',
-});
+    modelName: 'comment',
+})
 
 module.exports = Comment
