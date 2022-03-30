@@ -2,28 +2,22 @@ const jwt = require("jsonwebtoken");
 const privateKey = process.env.PRIVATEKEY
 class Tokens {
     static encodeToken(data, time)  {
-        const token = jwt.sign({ data:data }, privateKey, {  expiresIn: time || 3600});
-        return token;
+        return jwt.sign({data: data}, privateKey, {expiresIn: time || 3600});
     }
     static decodeToken(token) {
-        const decoded = jwt.verify(token, privateKey);
-        return decoded;
+        return jwt.verify(token, privateKey);
     }
     static accessTokenEncode(data, time)  {
-        const token = jwt.sign({ data:data }, privateKey, {  expiresIn: time || 3600});
-        return token;
+        return jwt.sign({data: data}, privateKey, {expiresIn: time || 3600});
     }
     static decodeAccessToken(token) {
-        const decoded = jwt.verify(token, privateKey);
-        return decoded;
+        return jwt.verify(token, privateKey);
     }
     static refreshTokenEncode(data, time)  {
-        const token = jwt.sign({ data:data }, privateKey, {  expiresIn: time || 86400});
-        return token;
+        return jwt.sign({data: data}, privateKey, {expiresIn: time || 86400});
     }
     static decodeRefreshToken(token) {
-        const decoded = jwt.verify(token, privateKey);
-        return decoded;
+        return jwt.verify(token, privateKey);
     }
 }
 module.exports = {Tokens};
