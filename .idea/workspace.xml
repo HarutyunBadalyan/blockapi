@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="927d180c-c370-49fb-aed2-28fd65f3c000" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/utils/compareandhashpassword.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/sendemail.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/tokens.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/registerroute.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +69,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1648557875952</updated>
-      <workItem from="1648557877070" duration="5959000" />
+      <workItem from="1648557877070" duration="6256000" />
     </task>
     <servers />
   </component>
