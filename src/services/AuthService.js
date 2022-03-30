@@ -1,6 +1,7 @@
 const User = require("../db/models/user")
 const {Password} = require("../utils/compareandhashpassword");
-const {SendMail} = require("../utils/sendemail")
+const {SendMail} = require("../utils/sendemail");
+const {Tokens} = require("../utils/tokens")
 
 class AuthService {
 
@@ -19,9 +20,41 @@ class AuthService {
                 msg: 'User successfully registered!'
             })
         } catch (e) {
-            console.log(e);
-            return e
+            if (e.name === "SequelizeUniqueConstraintError") {
+                return ({
+                    error: "Email already in use !"
+                })
+            }
+            return ({
+                error: e
+            })
         }
+    }
+
+    static async login(email, password) {
+
+        const user = await User.findOne({where: {email: email}});
+
+        if (!user) {
+            return ({
+                error: "Incorrect email or password"
+            })
+        }
+
+        const match = await Password.compare(password, user.password);
+        if (!match) {
+            return ({
+                msg: "Incorrect email or password"
+            })
+        }
+
+        const token = await Tokens.encodeToken(user.id);
+        const refreshToken = await Tokens.refreshTokenEncode(user.id)
+        return ({
+            access_token: token,
+            refresh_token: refreshToken,
+            msg: "User successfully logged in!"
+        })
     }
 }
 
