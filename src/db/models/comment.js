@@ -4,7 +4,7 @@ const {
     Model
 } = require('sequelize');
 
-class comment extends Model {
+class Comment extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -15,7 +15,7 @@ class comment extends Model {
     }
 }
 
-comment.init({
+Comment.init({
     user_id: DataTypes.INTEGER,
     post_id: DataTypes.INTEGER,
     text: DataTypes.STRING,

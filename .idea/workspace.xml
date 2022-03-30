@@ -6,8 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="927d180c-c370-49fb-aed2-28fd65f3c000" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db/migrations/20220330055654-create-comment.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db/models/comment.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/AuthController.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/AuthController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/db/models/comment.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/models/comment.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routers/AuthRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routers/AuthRouter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/AuthService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/AuthService.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +69,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1648557875952</updated>
-      <workItem from="1648557877070" duration="15825000" />
+      <workItem from="1648557877070" duration="20834000" />
     </task>
     <task id="LOCAL-00001" summary="Register flow">
       <created>1648632258597</created>
@@ -90,7 +92,21 @@
       <option name="project" value="LOCAL" />
       <updated>1648632604046</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="comments table column">
+      <created>1648635164991</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1648635164991</updated>
+    </task>
+    <task id="LOCAL-00005" summary="comments table column">
+      <created>1648635326795</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1648635326795</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -99,6 +115,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Register flow" />
     <MESSAGE value="Register flow1" />
-    <option name="LAST_COMMIT_MESSAGE" value="Register flow1" />
+    <MESSAGE value="comments table column" />
+    <option name="LAST_COMMIT_MESSAGE" value="comments table column" />
   </component>
 </project>
