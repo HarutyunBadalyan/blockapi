@@ -28,7 +28,8 @@ User.init({
         }
     },
     password: DataTypes.STRING,
-    nick_name: DataTypes.STRING
+    nick_name: DataTypes.STRING,
+    authenticated: DataTypes.BOOLEAN,
 }, {
     sequelize,
     modelName: 'User',

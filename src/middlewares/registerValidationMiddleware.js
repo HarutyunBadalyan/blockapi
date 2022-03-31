@@ -1,10 +1,10 @@
 const  compose = require('koa-compose');
 const { validationResults,body }  = require("koa-req-validation");
 const validationArray = [
-    body("firstName").isLength({min:1}).build(),
-    body("lastName").isLength({min:1}).build(),
-    body("email").isEmail().build(),
-    body("password").isLength({min:8}).build(),
+    body("firstName").isLength({min:1}).withMessage("What's your name").build(),
+    body("lastName").isLength({min:1}).withMessage("What's your lastname").build(),
+    body("email").withMessage("Invalid Email").isEmail().build(),
+    body("password").withMessage("Password must have 8 character").isLength({min:8}).build(),
     body('confirmPassword').custom((input,ctx) => {
 
         if (input !== ctx.request.body.password) {
