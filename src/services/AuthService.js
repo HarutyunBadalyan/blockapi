@@ -16,15 +16,18 @@ class AuthService {
                 nick_name: nick_name
             });
             const encodedToken = Tokens.encodeToken(email);
-            const authUrl = new URL(`/api/v1/auth/token/${encodedToken}`,process.env.BASEURL);
-            await SendMail.sendEmail(email, "Authentication", "hghghg", `<a href="${authUrl}">click here</a>`)
+            const authUrl = new URL(`/api/v1/auth/token/${encodedToken}`, process.env.BASEURL);
+            await SendMail.sendEmail(email, "Authentication", "hghghg", `<h2>Hi! ${firstName}</h2><p>  This HTML content is being send by NodeJS along with NodeMailer.</p>
+                    <a href="${authUrl}" style="background-color: #4CAF50;border: none;color: white;
+                    padding: 10px 25px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;
+                    border-radius: 8px;" target="_blank">Verify</a>`)
             return ({
                 msg: 'User successfully registered!'
             })
         } catch (e) {
             if (e.name === "SequelizeUniqueConstraintError") {
                 return ({
-                    error: "Email already in use !"
+                    error: "This Email already used"
                 })
             }
             return ({
@@ -34,41 +37,53 @@ class AuthService {
     }
 
     static async login(email, password) {
+        let message
+        try {
+            const user = await User.findOne({where: {email: email}});
 
-        const user = await User.findOne({where: {email: email}});
+            if (!user) {
+                throw  "Incorrect email or password"
+            }
 
-        if (!user) {
-            return ({
-                error: "Incorrect email or password"
-            })
+            const match = await Password.compare(password, user.password);
+            if (!match) {
+                throw "Incorrect email or password";
+            }
+
+            if (user.authenticated === true) {
+                const token = await Tokens.encodeToken(user.id);
+                const refreshToken = await Tokens.refreshTokenEncode(user.id);
+
+                message = {
+                    access_token: token,
+                    refresh_token: refreshToken,
+                    msg: "User successfully logged in!"
+                }
+            } else {
+                message = {error: "Check your email"}
+            }
+        } catch (e) {
+            message = {error: e}
+
+        } finally {
+            return message;
         }
 
-        const match = await Password.compare(password, user.password);
-        if (!match) {
-            return ({
-                msg: "Incorrect email or password"
-            })
-        }
-
-        const token = await Tokens.encodeToken(user.id);
-        const refreshToken = await Tokens.refreshTokenEncode(user.id)
-        return ({
-            access_token: token,
-            refresh_token: refreshToken,
-            msg: "User successfully logged in!"
-        })
     }
+
     static async verifyUser(token) {
         let message
         try {
             let decoded = Tokens.decodeToken(token);
-           await User.update({authenticated: true},{where: {
-               email:decoded.data
-           }})
+            await User.update({authenticated: true}, {
+                where: {
+                    email: decoded.data
+                }
+            })
             message = {msg: "success"};
 
-        } catch(e) {
-            console.log("verifyusererror",e);
+        } catch (e) {
+            console.log("verifyusererror", e);
             message = {msg: "token expired"};
         } finally {
             return message;
