@@ -8,7 +8,6 @@ const cors = require('koa2-cors');
 app.use(koaBody());
 app.use(router.routes());
 app.use(cors({origin:"*"}))
-app.use((ctx) => {    ctx.body = "hello"}) //this will be removed
 const PORT = process.env.PORT || 3000;
 
 sequelize.authenticate().then(() => {
