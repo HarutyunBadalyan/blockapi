@@ -8,5 +8,5 @@ router.prefix("/api/v1/auth");
 
 router.post("/register",registerValidationMiddleware, AuthController.register)
 router.post("/login",loginValidationMiddleware, AuthController.login)
-
+router.get("/token/:id", AuthController.verifyUser )
 module.exports = router

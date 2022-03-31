@@ -15,7 +15,9 @@ class AuthService {
                 password: hashPassword,
                 nick_name: nick_name
             });
-            await SendMail.sendEmail(email, "Authentication", "hghghg", "<a href=''>click here</a>")
+            const encodedToken = Tokens.encodeToken(email);
+            const authUrl = new URL(`/api/v1/auth/token/${encodedToken}`,process.env.BASEURL);
+            await SendMail.sendEmail(email, "Authentication", "hghghg", `<a href="${authUrl}">click here</a>`)
             return ({
                 msg: 'User successfully registered!'
             })
@@ -55,6 +57,22 @@ class AuthService {
             refresh_token: refreshToken,
             msg: "User successfully logged in!"
         })
+    }
+    static async verifyUser(token) {
+        let message
+        try {
+            let decoded = Tokens.decodeToken(token);
+           await User.update({authenticated: true},{where: {
+               email:decoded.data
+           }})
+            message = {msg: "success"};
+
+        } catch(e) {
+            console.log("verifyusererror",e);
+            message = {msg: "token expired"};
+        } finally {
+            return message;
+        }
     }
 }
 

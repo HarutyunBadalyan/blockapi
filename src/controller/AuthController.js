@@ -10,6 +10,10 @@ class AuthController {
         const {email, password} = ctx.request.body;
         ctx.body = await AuthService.login(email, password)
     }
+    static async verifyUser(ctx) {
+        let token = ctx.params.id
+        ctx.body  = await AuthService.verifyUser(token)
+    }
 }
 
 module.exports = AuthController
