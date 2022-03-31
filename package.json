@@ -20,6 +20,7 @@
     "koa-compose": "^4.1.0",
     "koa-req-validation": "^0.16.0",
     "koa-router": "^10.1.1",
+    "koa2-cors": "^2.0.6",
     "nodemailer": "^6.7.3",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
