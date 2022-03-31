@@ -11,6 +11,7 @@ const mount = require("koa-mount");
 const static_pages = new Koa();
 app.use(koaBody());
 app.use(cors({origin:"*"}))
+
 app.use(router.routes());
 
 
