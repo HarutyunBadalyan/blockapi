@@ -12,7 +12,7 @@ const static_pages = new Koa();
 app.use(koaBody());
 app.use(cors({origin:"*"}))
 app.use(router.routes());
-app.use((ctx) => {    ctx.body = "hello"}) //this will be removed
+
 
 
 static_pages.use(serve(__dirname + "/build"));
