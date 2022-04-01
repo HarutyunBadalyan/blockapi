@@ -6,7 +6,6 @@ class EditValidation {
         const validationArray = [
         body("firstName").isLength({min:1}).withMessage("What's your name").build(),
         body("lastName").isLength({min:1}).withMessage("What's your lastname").build(),
-        body("email").isEmail().withMessage("Invalid Email").build(),
         (ctx, next) => {
             const result = validationResults(ctx);
             console.log("validation",result)
