@@ -1,6 +1,7 @@
 const Router = require("koa-router");
+const PostController = require("../controller/PostController");
+
 const router = new Router()
-const PostController = require("../controller/PostController")
 
 router.prefix("/api/v1/post");
 
