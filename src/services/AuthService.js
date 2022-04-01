@@ -51,7 +51,7 @@ class AuthService {
             }
 
             if (user.authenticated === true) {
-                const token = await Tokens.encodeToken(user.id);
+                const token = await Tokens.accessTokenEncode(user.id);
                 const refreshToken = await Tokens.refreshTokenEncode(user.id);
 
                 message = {
