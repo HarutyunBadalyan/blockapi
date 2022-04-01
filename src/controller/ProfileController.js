@@ -5,8 +5,8 @@ class ProfileController {
         ctx.body = await ProfileService.get(ctx.header["x-access-token"]);
     }
     static async put(ctx) {
-        let {email,firstName, lastName, nick_name} = ctx.request.body
-        ctx.body = await ProfileService.put(ctx.header["x-access-token"],email,firstName,lastName,nick_name);
+        let {firstName, lastName, nick_name} = ctx.request.body
+        ctx.body = await ProfileService.put(ctx.header["x-access-token"],firstName,lastName,nick_name);
     }
 }
 
