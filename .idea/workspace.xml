@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="927d180c-c370-49fb-aed2-28fd65f3c000" name="Changes" comment="">
+    <list default="true" id="927d180c-c370-49fb-aed2-28fd65f3c000" name="Changes" comment="Email error">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routers/AuthRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routers/AuthRouter.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routers/PostRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routers/PostRouter.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routers/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/AuthService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/AuthService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routers/ProfileRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routers/ProfileRouter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/ProfileService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/ProfileService.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -155,6 +153,8 @@
     <MESSAGE value="env" />
     <MESSAGE value="login validation change" />
     <MESSAGE value="Email error" />
-    <option name="LAST_COMMIT_MESSAGE" value="Email error" />
+    <MESSAGE value="auth mid" />
+    <MESSAGE value="auth mid1" />
+    <option name="LAST_COMMIT_MESSAGE" value="auth mid1" />
   </component>
 </project>
