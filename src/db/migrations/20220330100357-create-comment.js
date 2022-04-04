@@ -30,7 +30,7 @@ module.exports = {
         }
       },
       text: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       parent_id: {
