@@ -51,7 +51,7 @@ class CommentService {
             }
         });
         return {
-            msg: "Deleted"
+            msg: " Deleted !"
         }
     }
 
