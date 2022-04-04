@@ -35,7 +35,6 @@ class CommentService {
                 where: {
                     id: id,
                     user_id: user_id
-
                 }
             })
         } catch (e) {

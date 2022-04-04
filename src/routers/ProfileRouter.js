@@ -5,5 +5,6 @@ const EditValidation = require("../middlewares/editValidation")
 router.prefix("/api/v1/profile");
 
 router.get("/", ProfileController.get);
-router.patch("/",EditValidation.profile(), ProfileController.put);
+router.put("/",EditValidation.profile(), ProfileController.put);
+router.post("/password", EditValidation.resetPasswordValidation(), ProfileController.resetPassword)
 module.exports = router;

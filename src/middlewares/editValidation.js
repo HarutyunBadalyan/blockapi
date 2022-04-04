@@ -19,5 +19,27 @@ class EditValidation {
     let editValidationMiddleware = compose(validationArray);
     return editValidationMiddleware;
     }
+    static resetPasswordValidation() {
+        const validationArray = [
+        body("password").isLength({min:8}).withMessage("Password must have 8 character").build(),
+        body('confirmPassword').custom((input,ctx) => {
+    
+            if (input !== ctx.request.body.password) {
+              throw new Error('Password confirmation does not match password');
+            }
+        
+            // Indicates the success of this synchronous custom validator
+            return true;
+          }).build(),
+        (ctx, next) => {
+            const result = validationResults(ctx);
+            if(!result.results.length) {
+                return next();
+            }
+            ctx.body = result.results;
+        }];
+        let editValidationMiddleware = compose(validationArray);
+         return editValidationMiddleware;
+    }
 }
 module.exports = EditValidation;
