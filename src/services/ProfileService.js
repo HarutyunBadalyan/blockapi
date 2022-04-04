@@ -1,7 +1,7 @@
 const {Tokens}  = require("../utils/tokens");
 const User = require("../db/models/user");
 
-
+console.log("this will be removed")
 
 class ProfileService {
     static async get(token) {
