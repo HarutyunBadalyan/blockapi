@@ -1,0 +1,541 @@
+Index: src/routers/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const Router = require('koa-router');\r\nconst authRouter = require(\"./AuthRouter\")\r\nconst postRouter = require(\"./PostRouter\")\r\nconst profileRouter = require(\"./ProfileRouter\");\r\nconst Auth = require(\"../middlewares/auth\");\r\nconst router = new Router();\r\n\r\nrouter.use(authRouter.routes());\r\nrouter.use(Auth);\r\nrouter.use(postRouter.routes());\r\nrouter.use(profileRouter.routes());\r\n\r\n\r\nmodule.exports = router;
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/routers/index.js b/src/routers/index.js
+--- a/src/routers/index.js	(revision a8a9525d3383e087eef45ad6ba01ef673a517f2f)
++++ b/src/routers/index.js	(date 1649073505747)
+@@ -2,6 +2,7 @@
+ const authRouter = require("./AuthRouter")
+ const postRouter = require("./PostRouter")
+ const profileRouter = require("./ProfileRouter");
++const commentRouter = require("./CommentRouter");
+ const Auth = require("../middlewares/auth");
+ const router = new Router();
+ 
+@@ -9,6 +10,7 @@
+ router.use(Auth);
+ router.use(postRouter.routes());
+ router.use(profileRouter.routes());
++router.use(commentRouter.routes())
+ 
+ 
+ module.exports = router;
+\ No newline at end of file
+Index: src/db/migrations/20220330100357-create-comment.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\r\nconst {DataTypes} = require(\"sequelize\");\r\nmodule.exports = {\r\n  async up(queryInterface) {\r\n    await queryInterface.createTable('comments', {\r\n      id: {\r\n        allowNull: false,\r\n        autoIncrement: true,\r\n        primaryKey: true,\r\n        type: DataTypes.INTEGER\r\n      },\r\n      user_id: {\r\n        type: DataTypes.INTEGER,\r\n        allowNull: false,\r\n        foreignKey: true,\r\n        references: {\r\n          model: \"Users\",\r\n          key: \"id\"\r\n        }\r\n      },\r\n      post_id: {\r\n        type: DataTypes.INTEGER,\r\n        allowNull: false,\r\n        foreignKey: true,\r\n        references: {\r\n          model: \"Posts\",\r\n          key: \"id\"\r\n        }\r\n      },\r\n      text: {\r\n        type: DataTypes.STRING,\r\n        allowNull: false,\r\n      },\r\n      parent_id: {\r\n        type: DataTypes.STRING,\r\n        allowNull: false,\r\n      },\r\n      createdAt: {\r\n        allowNull: false,\r\n        type: DataTypes.DATE\r\n      },\r\n      updatedAt: {\r\n        allowNull: false,\r\n        type: DataTypes.DATE\r\n      }\r\n    });\r\n  },\r\n  async down(queryInterface) {\r\n    await queryInterface.dropTable('comments');\r\n  }\r\n};
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/db/migrations/20220330100357-create-comment.js b/src/db/migrations/20220330100357-create-comment.js
+--- a/src/db/migrations/20220330100357-create-comment.js	(revision a8a9525d3383e087eef45ad6ba01ef673a517f2f)
++++ b/src/db/migrations/20220330100357-create-comment.js	(date 1649073505741)
+@@ -13,6 +13,7 @@
+         type: DataTypes.INTEGER,
+         allowNull: false,
+         foreignKey: true,
++        onDelete:"cascade",
+         references: {
+           model: "Users",
+           key: "id"
+@@ -22,18 +23,20 @@
+         type: DataTypes.INTEGER,
+         allowNull: false,
+         foreignKey: true,
++        onDelete: "cascade",
+         references: {
+           model: "Posts",
+           key: "id"
+         }
+       },
+       text: {
+-        type: DataTypes.STRING,
++        type: DataTypes.TEXT,
+         allowNull: false,
+       },
+       parent_id: {
+-        type: DataTypes.STRING,
++        type: DataTypes.INTEGER,
+         allowNull: false,
++        foreignKey: true,
+       },
+       createdAt: {
+         allowNull: false,
+Index: src/routers/ProfileRouter.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const Router = require(\"koa-router\");\r\nconst router = new Router();\r\nconst ProfileController = require(\"../controller/ProfileController\")\r\nconst EditValidation = require(\"../middlewares/editValidation\")\r\nrouter.prefix(\"/api/v1/profile\");\r\n\r\nrouter.get(\"/\", ProfileController.get);\r\nrouter.patch(\"/\",EditValidation.profile(), ProfileController.put);\r\nmodule.exports = router;\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/routers/ProfileRouter.js b/src/routers/ProfileRouter.js
+--- a/src/routers/ProfileRouter.js	(revision a8a9525d3383e087eef45ad6ba01ef673a517f2f)
++++ b/src/routers/ProfileRouter.js	(date 1649073582223)
+@@ -5,5 +5,6 @@
+ router.prefix("/api/v1/profile");
+ 
+ router.get("/", ProfileController.get);
+-router.patch("/",EditValidation.profile(), ProfileController.put);
+-module.exports = router;
++router.put("/",EditValidation.profile(), ProfileController.put);
++router.post("/password", EditValidation.resetPasswordValidation(), ProfileController.resetPassword)
++module.exports = router;
+\ No newline at end of file
+Index: src/middlewares/auth.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const {Tokens} = require(\"../utils/tokens\")\r\nmodule.exports = async (ctx, next) => {\r\n    try{\r\n        const accessToken = ctx.request.header['x-access-token'];\r\n        Tokens.decodeAccessToken(accessToken);\r\n        await next()\r\n    }catch (e){\r\n        ctx.body = {\r\n            error:\"Permission denied\"\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/middlewares/auth.js b/src/middlewares/auth.js
+--- a/src/middlewares/auth.js	(revision a8a9525d3383e087eef45ad6ba01ef673a517f2f)
++++ b/src/middlewares/auth.js	(date 1649073505743)
+@@ -2,9 +2,12 @@
+ module.exports = async (ctx, next) => {
+     try{
+         const accessToken = ctx.request.header['x-access-token'];
+-        Tokens.decodeAccessToken(accessToken);
++        const x = Tokens.decodeAccessToken(accessToken);
++
+         await next()
++
+     }catch (e){
++
+         ctx.body = {
+             error:"Permission denied"
+         }
+Index: src/services/PostService.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const Post = require(\"../db/models/post\");\r\n\r\nclass PostService {\r\n    static async createPost(user_id, title, subtitle, description) {\r\n\r\n        return await Post.create({\r\n            title: title,\r\n            subtitle: subtitle,\r\n            description: description,\r\n            user_id: user_id\r\n        })\r\n    };\r\n\r\n    static async getAllPost(limit, offset) {\r\n        return await Post.findAll({\r\n            limit: limit,\r\n            offset: offset,\r\n            order: [['updatedAt', 'DESC']],\r\n        })\r\n    }\r\n\r\n    static async getAllMyPost(id, limit, offset) {\r\n        return await Post.findAll({\r\n            where: {user_id: id},\r\n            limit: limit,\r\n            offset: offset,\r\n            order: [['updatedAt', 'DESC']]\r\n        })\r\n    };\r\n\r\n    static async updatePost(id, post_id, body) {\r\n\r\n        const post = await Post.findOne({\r\n            where: {\r\n                id: post_id\r\n            }\r\n        });\r\n\r\n        if (post.user_id === id) {\r\n\r\n            const updatePost = await Post.update(body, {\r\n                where: {\r\n                    user_id: id,\r\n                    id: post_id\r\n                }\r\n            });\r\n            return ({\r\n                msg: \"Post successfully updated !\",\r\n                post: updatePost\r\n            })\r\n        } else {\r\n            return ({\r\n                error: \"Not Done!Permission denied\"\r\n            })\r\n        }\r\n    };\r\n\r\n    static async deletePost(id, post_id) {\r\n\r\n            const post = await Post.findOne({\r\n                where: {\r\n                    id: post_id\r\n                }\r\n            });\r\n            if (post.user_id === id) {\r\n\r\n                await Post.destroy({\r\n                    where: {\r\n                        user_id: id,\r\n                        id: post_id\r\n                    }\r\n                });\r\n                return ({\r\n                    msg: \"Post successfully deleted !\",\r\n                })\r\n            } else {\r\n                return ({\r\n                    error: \"Not Done!Permission denied\"\r\n                })\r\n            }\r\n         \r\n\r\n    }\r\n}\r\n\r\nmodule.exports = PostService
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/services/PostService.js b/src/services/PostService.js
+--- a/src/services/PostService.js	(revision a8a9525d3383e087eef45ad6ba01ef673a517f2f)
++++ b/src/services/PostService.js	(date 1649073505752)
+@@ -1,5 +1,5 @@
+ const Post = require("../db/models/post");
+-
++const Comment = require("../db/models/comment")
+ class PostService {
+     static async createPost(user_id, title, subtitle, description) {
+ 
+@@ -15,7 +15,12 @@
+         return await Post.findAll({
+             limit: limit,
+             offset: offset,
+-            order: [['updatedAt', 'DESC']],
++            include: [{
++                model:Comment,
++                nested: true,
++                limit:5
++            }],
++            order: [['createdAt', 'DESC']]
+         })
+     }
+ 
+@@ -24,7 +29,12 @@
+             where: {user_id: id},
+             limit: limit,
+             offset: offset,
+-            order: [['updatedAt', 'DESC']]
++            include: [{
++                model:Comment,
++                nested: true,
++                limit:5
++            }],
++            order: [['createAt', 'DESC']]
+         })
+     };
+ 
+@@ -57,28 +67,28 @@
+ 
+     static async deletePost(id, post_id) {
+ 
+-            const post = await Post.findOne({
+-                where: {
+-                    id: post_id
+-                }
+-            });
+-            if (post.user_id === id) {
++        const post = await Post.findOne({
++            where: {
++                id: post_id
++            }
++        });
++        if (post.user_id === id) {
+ 
+-                await Post.destroy({
+-                    where: {
+-                        user_id: id,
+-                        id: post_id
+-                    }
+-                });
+-                return ({
+-                    msg: "Post successfully deleted !",
+-                })
+-            } else {
+-                return ({
+-                    error: "Not Done!Permission denied"
+-                })
+-            }
+-         
++            await Post.destroy({
++                where: {
++                    user_id: id,
++                    id: post_id
++                }
++            });
++            return ({
++                msg: "Post successfully deleted !",
++            })
++        } else {
++            return ({
++                error: "Not Done!Permission denied"
++            })
++        }
++
+ 
+     }
+ }
+Index: src/services/ProfileService.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const {Tokens}  = require(\"../utils/tokens\");\r\nconst User = require(\"../db/models/user\");\r\n\r\n\r\n\r\nclass ProfileService {\r\n    static async get(token) {\r\n        let message = {};\r\n        try {\r\n        let decodedToken = Tokens.decodeAccessToken(token);\r\n        let {email, firstName, lastName, nick_name} = await User.findOne({raw:true, where:{\r\n            id:decodedToken.data\r\n        }})   \r\n        message = {email, firstName, lastName, nick_name};\r\n        } catch(e) {\r\n            console.log(\"Profile service\",e);\r\n            message = {error: \"token expired\"};\r\n        } finally {\r\n            return message;\r\n        }\r\n    }\r\n    static async put(token, firstName, lastName, nick_name) {\r\n        let message = {};\r\n        try {\r\n        let decodedToken = Tokens.decodeAccessToken(token);\r\n        let user = await User.findOne({raw:true, where:{\r\n            id:decodedToken.data\r\n        }})   \r\n        if(!user) {\r\n            throw \"Invalid User\";\r\n        }\r\n        let updatedUser = await User.update({firstName,lastName, nick_name},{where:{id:user.id}});\r\n        console.log(updatedUser)\r\n        if(!updatedUser[0]) {\r\n            throw \"something went wrong\"\r\n        }\r\n        message = {msg:\"success\"};\r\n        } catch(e) {\r\n            console.log(\"Profile service\",e);\r\n            message = {error: \"token expired\"};\r\n        } finally {\r\n            return message;\r\n        }\r\n    }\r\n\r\n}\r\n\r\nmodule.exports = ProfileService;
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/services/ProfileService.js b/src/services/ProfileService.js
+--- a/src/services/ProfileService.js	(revision a8a9525d3383e087eef45ad6ba01ef673a517f2f)
++++ b/src/services/ProfileService.js	(date 1649073505753)
+@@ -1,4 +1,6 @@
+ const {Tokens}  = require("../utils/tokens");
++const {Password} = require("../utils/compareandhashpassword");
++const {SendMail} = require("../utils/sendemail");
+ const User = require("../db/models/user");
+ 
+ 
+@@ -42,6 +44,51 @@
+             return message;
+         }
+     }
++    static async resetPassword(password,token) {
++        let message = {};
++        try {
++            let decodedToken = Tokens.decodeAccessToken(token);
++            let user = await User.findOne({raw:true, where:{
++            id:decodedToken.data
++             }})   
++             if(!user) {
++                throw "Invalid User";
++            }
++           const hashedPassword = await Password.hash(password);
++           const encodedToken = Tokens.encodeToken(JSON.stringify({password:hashedPassword,id:user.id}));
++           const authUrl = new URL(`/api/v1/auth/password/${encodedToken}`, process.env.BASEURL);
++           await SendMail.sendEmail(user.email, "Reset Password verify", "hghghg", `<h2>Hi! ${user.firstName}</h2><p>  This HTML content is being send by NodeJS along with NodeMailer.</p>
++           <a href="${authUrl}" style="background-color: #4CAF50;border: none;color: white;
++           padding: 10px 25px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;
++           border-radius: 8px;" target="_blank">Verify</a>`)
++           message = {msg: "success"};
++        } catch(e) {
++            console.log("reset password",e)
++            message = {error: e}
++        } finally {
++            return message;
++        }
++    }
++    static async verifyPassword(token) {
++        let message
++        try {
++            let decoded = Tokens.decodeToken(token);
++            let objectDecode = JSON.parse(decoded.data)
++            await User.update({  password: objectDecode.password}, {
++                where: {
++                   id: objectDecode.id
++                }
++            })
++            message = {msg: "success"};
++
++        } catch (e) {
++            console.log("verifypassworderror", e);
++            message = {msg: "token expired"};
++        } finally {
++            return message;
++        }
++    
++    }
+ 
+ }
+ 
+Index: src/services/CommentService.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/services/CommentService.js b/src/services/CommentService.js
+new file mode 100644
+--- /dev/null	(date 1649073505749)
++++ b/src/services/CommentService.js	(date 1649073505749)
+@@ -0,0 +1,60 @@
++const Comment = require("../db/models/comment");
++const sequelize = require('../connections/db_connection')
++
++class CommentService {
++
++    static async createComment(user_id, post_id, parent_id, text) {
++        console.log(user_id, post_id, parent_id, text)
++        return await Comment.create({
++            user_id: user_id,
++            post_id: post_id,
++            parent_id: parent_id,
++            text: text
++        })
++    };
++
++    static async getComment(post_id,parent_id) {
++
++        return await Comment.sequelize.query(`WITH RECURSIVE comments_cte (id,path,text,post_id,user_id
++            ) AS (
++            SELECT id,'0',text,post_id,user_id
++            FROM Comments
++            WHERE parent_id = ${parent_id}
++            UNION ALL
++            SELECT r.id,concat(path, '/', r.parent_id),r.text,r.post_id,r.user_id
++            FROM Comments r
++                JOIN comments_cte ON comments_cte.id = r.parent_id
++                )
++            SELECT id, path, text, post_id, user_id
++            FROM comments_cte where post_id=${post_id}`)
++    };
++
++    static async updateComment(id, user_id, text) {
++        try {
++            return await Comment.update({text}, {
++                where: {
++                    id: id,
++                    user_id: user_id
++                }
++            })
++        } catch (e) {
++
++        }
++    };
++
++    static async deleteComment(id, user_id) {
++
++        await Comment.destroy({
++            where: {
++                id: id,
++                user_id: user_id
++            }
++        });
++        return {
++            msg: "Deleted"
++        }
++    }
++
++}
++
++module.exports = CommentService
+\ No newline at end of file
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"927d180c-c370-49fb-aed2-28fd65f3c000\" name=\"Changes\" comment=\"Email error\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/routers/ProfileRouter.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/routers/ProfileRouter.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/services/ProfileService.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/services/ProfileService.js\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"JavaScript File\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"273nwMFK8497hMGXV239M901NAO\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">\r\n    <property name=\"RunOnceActivity.OpenProjectViewOnStart\" value=\"true\" />\r\n    <property name=\"RunOnceActivity.ShowReadmeOnStart\" value=\"true\" />\r\n    <property name=\"WebServerToolWindowFactoryState\" value=\"false\" />\r\n    <property name=\"last_opened_file_path\" value=\"$PROJECT_DIR$/src/db/config\" />\r\n    <property name=\"node.js.detected.package.eslint\" value=\"true\" />\r\n    <property name=\"node.js.detected.package.tslint\" value=\"true\" />\r\n    <property name=\"node.js.selected.package.eslint\" value=\"(autodetect)\" />\r\n    <property name=\"node.js.selected.package.tslint\" value=\"(autodetect)\" />\r\n    <property name=\"nodejs_package_manager_path\" value=\"npm\" />\r\n    <property name=\"vue.rearranger.settings.migration\" value=\"true\" />\r\n  </component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\Inomma\\Desktop\\blockapi\\src\\db\\config\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"config.js\" type=\"NodeJSConfigurationType\" temporary=\"true\" nameIsGenerated=\"true\" path-to-js-file=\"$PROJECT_DIR$/src/db/config/config.js\" working-dir=\"$PROJECT_DIR$/src/db/config\">\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Node.js.config.js\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"927d180c-c370-49fb-aed2-28fd65f3c000\" name=\"Changes\" comment=\"\" />\r\n      <created>1648557875952</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1648557875952</updated>\r\n      <workItem from=\"1648557877070\" duration=\"22448000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Register flow\">\r\n      <created>1648632258597</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1648632258597</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"Register flow1\">\r\n      <created>1648632587522</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1648632587522</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"Register flow1\">\r\n      <created>1648632604046</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1648632604046</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"comments table column\">\r\n      <created>1648635164991</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1648635164991</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"comments table column\">\r\n      <created>1648635326795</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1648635326795</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"login flow\">\r\n      <created>1648640239984</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1648640239984</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"env\">\r\n      <created>1648705000591</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1648705000591</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00008\" summary=\"env\">\r\n      <created>1648705410458</created>\r\n      <option name=\"number\" value=\"00008\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00008\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1648705410458</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00009\" summary=\"login validation change\">\r\n      <created>1648730180499</created>\r\n      <option name=\"number\" value=\"00009\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00009\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1648730180499</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00010\" summary=\"Email error\">\r\n      <created>1648730940050</created>\r\n      <option name=\"number\" value=\"00010\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00010\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1648730940050</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"11\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Register flow\" />\r\n    <MESSAGE value=\"Register flow1\" />\r\n    <MESSAGE value=\"comments table column\" />\r\n    <MESSAGE value=\"login flow\" />\r\n    <MESSAGE value=\"env\" />\r\n    <MESSAGE value=\"login validation change\" />\r\n    <MESSAGE value=\"Email error\" />\r\n    <MESSAGE value=\"auth mid\" />\r\n    <MESSAGE value=\"auth mid1\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"auth mid1\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision a8a9525d3383e087eef45ad6ba01ef673a517f2f)
++++ b/.idea/workspace.xml	(date 1649073613574)
+@@ -6,6 +6,10 @@
+   <component name="ChangeListManager">
+     <list default="true" id="927d180c-c370-49fb-aed2-28fd65f3c000" name="Changes" comment="Email error">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/db/migrations/20220330100357-create-comment.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/migrations/20220330100357-create-comment.js" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/middlewares/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/middlewares/auth.js" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/routers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routers/index.js" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/services/PostService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/PostService.js" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/routers/ProfileRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routers/ProfileRouter.js" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/services/ProfileService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/ProfileService.js" afterDir="false" />
+     </list>
+@@ -153,8 +157,6 @@
+     <MESSAGE value="env" />
+     <MESSAGE value="login validation change" />
+     <MESSAGE value="Email error" />
+-    <MESSAGE value="auth mid" />
+-    <MESSAGE value="auth mid1" />
+-    <option name="LAST_COMMIT_MESSAGE" value="auth mid1" />
++    <option name="LAST_COMMIT_MESSAGE" value="Email error" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: src/controller/CommentController.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/CommentController.js b/src/controller/CommentController.js
+new file mode 100644
+--- /dev/null	(date 1649073505740)
++++ b/src/controller/CommentController.js	(date 1649073505740)
+@@ -0,0 +1,39 @@
++const CommentService = require("../services/CommentService")
++
++class CommentController {
++
++    static async createComment(ctx) {
++
++        const user_id = ctx.query.user_id;
++        const post_id = ctx.query.post_id;
++        const {text} = ctx.request.body;
++        const parent_id = ctx.query.parent_id || 0;
++
++        ctx.body = await CommentService.createComment(user_id, post_id, parent_id, text)
++    };
++
++    static async getComment(ctx) {
++
++        const post_id = ctx.query.post_id;
++        const parent_id = ctx.query.parent_id;
++        ctx.body = await CommentService.getComment(post_id,parent_id)
++    };
++
++    static async updateComment(ctx) {
++
++        const id = ctx.query.id;
++        const user_id = ctx.query.user_id
++        const text = ctx.request.body.text
++
++        ctx.body = await CommentService.updateComment(id, user_id, text)
++    };
++
++    static async deleteComment(ctx) {
++
++        const id = ctx.query.id;
++        const user_id = ctx.query.user_id;
++        ctx.body = await CommentService.deleteComment(id, user_id)
++    }
++}
++
++module.exports = CommentController
+\ No newline at end of file
+Index: src/controller/ProfileController.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const ProfileService = require(\"../services/ProfileService\");\r\n\r\nclass ProfileController {\r\n    static async get(ctx) {\r\n        ctx.body = await ProfileService.get(ctx.header[\"x-access-token\"]);\r\n    }\r\n    static async put(ctx) {\r\n        let {firstName, lastName, nick_name} = ctx.request.body\r\n        ctx.body = await ProfileService.put(ctx.header[\"x-access-token\"],firstName,lastName,nick_name);\r\n    }\r\n}\r\n\r\nmodule.exports = ProfileController;
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/ProfileController.js b/src/controller/ProfileController.js
+--- a/src/controller/ProfileController.js	(revision a8a9525d3383e087eef45ad6ba01ef673a517f2f)
++++ b/src/controller/ProfileController.js	(date 1649073505740)
+@@ -8,6 +8,14 @@
+         let {firstName, lastName, nick_name} = ctx.request.body
+         ctx.body = await ProfileService.put(ctx.header["x-access-token"],firstName,lastName,nick_name);
+     }
++    static async resetPassword(ctx) {
++        let {password,} = ctx.request.body;
++        ctx.body = await ProfileService.resetPassword(password,ctx.header["x-access-token"])
++    }
++    static async verifyPassword(ctx) {
++        let token = ctx.params.id
++        ctx.body  = await ProfileService.verifyPassword(token)
++    }
+ }
+ 
+ module.exports = ProfileController;
+\ No newline at end of file
+Index: src/middlewares/editValidation.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const compose = require('koa-compose');\r\nconst {body, validationResults} = require(\"koa-req-validation\");\r\n\r\nclass EditValidation {\r\n    static profile() {\r\n        const validationArray = [\r\n        body(\"firstName\").isLength({min:1}).withMessage(\"What's your name\").build(),\r\n        body(\"lastName\").isLength({min:1}).withMessage(\"What's your lastname\").build(),\r\n        (ctx, next) => {\r\n            const result = validationResults(ctx);\r\n            console.log(\"validation\",result)\r\n            if(!result.results.length) {\r\n                return next();\r\n            }\r\n            ctx.body = result.results;\r\n        }\r\n    ];\r\n    \r\n    let editValidationMiddleware = compose(validationArray);\r\n    return editValidationMiddleware;\r\n    }\r\n}\r\nmodule.exports = EditValidation;
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/middlewares/editValidation.js b/src/middlewares/editValidation.js
+--- a/src/middlewares/editValidation.js	(revision a8a9525d3383e087eef45ad6ba01ef673a517f2f)
++++ b/src/middlewares/editValidation.js	(date 1649073505744)
+@@ -19,5 +19,27 @@
+     let editValidationMiddleware = compose(validationArray);
+     return editValidationMiddleware;
+     }
++    static resetPasswordValidation() {
++        const validationArray = [
++        body("password").isLength({min:8}).withMessage("Password must have 8 character").build(),
++        body('confirmPassword').custom((input,ctx) => {
++    
++            if (input !== ctx.request.body.password) {
++              throw new Error('Password confirmation does not match password');
++            }
++        
++            // Indicates the success of this synchronous custom validator
++            return true;
++          }).build(),
++        (ctx, next) => {
++            const result = validationResults(ctx);
++            if(!result.results.length) {
++                return next();
++            }
++            ctx.body = result.results;
++        }];
++        let editValidationMiddleware = compose(validationArray);
++         return editValidationMiddleware;
++    }
+ }
+ module.exports = EditValidation;
+\ No newline at end of file
+Index: src/routers/CommentRouter.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/routers/CommentRouter.js b/src/routers/CommentRouter.js
+new file mode 100644
+--- /dev/null	(date 1649073505745)
++++ b/src/routers/CommentRouter.js	(date 1649073505745)
+@@ -0,0 +1,13 @@
++const Router = require("koa-router");
++const CommentController = require("../controller/CommentController");
++
++const router = new Router();
++
++router.prefix("/api/v1/comment")
++
++router.post("/", CommentController.createComment);
++router.get("/", CommentController.getComment);
++router.put("/", CommentController.updateComment);
++router.delete("/", CommentController.deleteComment)
++
++module.exports = router
+\ No newline at end of file
+Index: src/routers/AuthRouter.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const Router = require(\"koa-router\");\r\nconst router = new Router();\r\nconst AuthController = require(\"../controller/AuthController\");\r\nconst AuthValidation = require(\"../middlewares/authValidation\")\r\nrouter.prefix(\"/api/v1/auth\");\r\n\r\nrouter.post(\"/register\",AuthValidation.registerValidation(), AuthController.register)\r\nrouter.post(\"/login\",AuthValidation.loginValidation(), AuthController.login)\r\nrouter.get(\"/token/:id\", AuthController.verifyUser )\r\nmodule.exports = router
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/routers/AuthRouter.js b/src/routers/AuthRouter.js
+--- a/src/routers/AuthRouter.js	(revision a8a9525d3383e087eef45ad6ba01ef673a517f2f)
++++ b/src/routers/AuthRouter.js	(date 1649073505745)
+@@ -2,9 +2,11 @@
+ const router = new Router();
+ const AuthController = require("../controller/AuthController");
+ const AuthValidation = require("../middlewares/authValidation")
++const ProfileController = require("../controller/ProfileController")
+ router.prefix("/api/v1/auth");
+ 
+ router.post("/register",AuthValidation.registerValidation(), AuthController.register)
+ router.post("/login",AuthValidation.loginValidation(), AuthController.login)
+ router.get("/token/:id", AuthController.verifyUser )
++router.get("/password/:id", ProfileController.verifyPassword)
+ module.exports = router
+\ No newline at end of file
