@@ -3,7 +3,7 @@ const {Password} = require("../utils/compareandhashpassword");
 const {SendMail} = require("../utils/sendemail");
 const User = require("../db/models/user");
 
-
+console.log("this will be removed")
 
 class ProfileService {
     static async get(token) {
