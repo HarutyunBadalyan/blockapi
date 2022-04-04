@@ -1,5 +1,5 @@
 const Post = require("../db/models/post");
-const Comment = require("../db/models/comment")
+
 class PostService {
     static async createPost(user_id, title, subtitle, description) {
 
@@ -15,12 +15,7 @@ class PostService {
         return await Post.findAll({
             limit: limit,
             offset: offset,
-            include: [{
-                model:Comment,
-                nested: true,
-                limit:5
-            }],
-            order: [['createdAt', 'DESC']]
+            order: [['updatedAt', 'DESC']],
         })
     }
 
@@ -29,12 +24,7 @@ class PostService {
             where: {user_id: id},
             limit: limit,
             offset: offset,
-            include: [{
-                model:Comment,
-                nested: true,
-                limit:5
-            }],
-            order: [['createAt', 'DESC']]
+            order: [['updatedAt', 'DESC']]
         })
     };
 
@@ -67,28 +57,28 @@ class PostService {
 
     static async deletePost(id, post_id) {
 
-        const post = await Post.findOne({
-            where: {
-                id: post_id
-            }
-        });
-        if (post.user_id === id) {
-
-            await Post.destroy({
+            const post = await Post.findOne({
                 where: {
-                    user_id: id,
                     id: post_id
                 }
             });
-            return ({
-                msg: "Post successfully deleted !",
-            })
-        } else {
-            return ({
-                error: "Not Done!Permission denied"
-            })
-        }
+            if (post.user_id === id) {
 
+                await Post.destroy({
+                    where: {
+                        user_id: id,
+                        id: post_id
+                    }
+                });
+                return ({
+                    msg: "Post successfully deleted !",
+                })
+            } else {
+                return ({
+                    error: "Not Done!Permission denied"
+                })
+            }
+         
 
     }
 }
