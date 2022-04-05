@@ -34,7 +34,7 @@ class PostService {
                 nested: true,
                 limit:5
             }],
-            order: [['createAt', 'DESC']]
+            order: [['createdAt', 'DESC']]
         })
     };
 
