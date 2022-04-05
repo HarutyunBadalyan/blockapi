@@ -4,17 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e767c905-c50c-422b-b14b-df89cf727ac3" name="Changes" comment="fav_posts">
-      <change afterPath="$PROJECT_DIR$/src/controller/FavoritePostController.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/routers/FavoritePostRouter.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/services/FavoritePostService.js" afterDir="false" />
+    <list default="true" id="927d180c-c370-49fb-aed2-28fd65f3c000" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/CommentController.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/CommentController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/PostController.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/PostController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db/models/favorite_post.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/models/favorite_post.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routers/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/CommentService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/CommentService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/PostService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/PostService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/db/models/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/models/user.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,7 +148,14 @@
       <option name="project" value="LOCAL" />
       <updated>1648888623293</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="fav_posts">
+      <created>1649153439950</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1649153439950</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
