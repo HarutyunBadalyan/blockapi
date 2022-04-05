@@ -21,7 +21,7 @@ Favorite_post.init({
     post_id: DataTypes.INTEGER
 }, {
     sequelize,
-    modelName: 'Favorite_post',
+    modelName: 'favorite_post',
 });
 
 

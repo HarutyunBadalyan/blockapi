@@ -4,7 +4,7 @@ class CommentController {
 
     static async createComment(ctx) {
 
-        const user_id = ctx.query.user_id;
+        const user_id = ctx.state.user_id;
         const post_id = ctx.query.post_id;
         const {text} = ctx.request.body;
         const parent_id = ctx.query.parent_id || 0;
@@ -22,7 +22,7 @@ class CommentController {
     static async updateComment(ctx) {
 
         const id = ctx.query.id;
-        const user_id = ctx.query.user_id
+        const user_id = ctx.state.user_id;
         const text = ctx.request.body.text
 
         ctx.body = await CommentService.updateComment(id, user_id, text)
@@ -31,7 +31,7 @@ class CommentController {
     static async deleteComment(ctx) {
 
         const id = ctx.query.id;
-        const user_id = ctx.query.user_id;
+        const user_id = ctx.state.user_id;
         ctx.body = await CommentService.deleteComment(id, user_id)
     }
 }

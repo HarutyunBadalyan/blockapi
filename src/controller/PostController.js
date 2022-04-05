@@ -5,8 +5,7 @@ class PostController {
     static async createPost(ctx) {
 
         const {title, subtitle, description} = ctx.request.body;
-        // const user_id = ctx.state.user.id;
-        const user_id = 11;
+        const user_id = ctx.state.user.id;
         ctx.body = await PostService.createPost(user_id, title, subtitle, description)
     };
 
@@ -19,8 +18,7 @@ class PostController {
 
     static async getAllMyPosts(ctx) {
 
-        const id = ctx.query.id;
-        // const id = ctx.state.user.id;
+        const id = ctx.state.user.id;
         const limit = ctx.query.limit || 10;
         const {offset} = ctx.query || 0;
         ctx.body = await PostService.getAllMyPost(id, limit, offset)
@@ -28,8 +26,7 @@ class PostController {
 
     static async updatePost(ctx) {
 
-        // const id = ctx.state.user.id;
-        const id = +ctx.query.id;
+        const id = +ctx.state.user.id;
         const post_id = ctx.query.post_id;
         const body = ctx.request.body;
         ctx.body = await PostService.updatePost(id, post_id, body)
