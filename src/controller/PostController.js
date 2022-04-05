@@ -6,7 +6,7 @@ class PostController {
 
         const {title, subtitle, description} = ctx.request.body;
         // const user_id = ctx.state.user.id;
-        const user_id = 1;
+        const user_id = 11;
         ctx.body = await PostService.createPost(user_id, title, subtitle, description)
     };
 
