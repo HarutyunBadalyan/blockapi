@@ -1,6 +1,7 @@
 const sequelize = require("../../connections/db_connection");
 const {DataTypes} = require("sequelize")
 const Post = require("./post")
+const Image = require("./image")
 const Favorite_post = require("./favorite_post");
 
 const {
@@ -37,5 +38,6 @@ User.init({
 
 User.hasMany(Post,{foreignKey:"user_id"})
 User.hasMany(Favorite_post,{foreignKey:"user_id"})
+User.hasOne(Image,{foreignKey:"user_id"})
 
 module.exports = User
