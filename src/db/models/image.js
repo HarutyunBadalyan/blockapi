@@ -23,3 +23,5 @@ Image.init({
     sequelize,
     modelName: 'Image',
 })
+
+module.exports = Image
