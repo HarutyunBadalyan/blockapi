@@ -16,7 +16,7 @@ class ProfileService {
             id:decodedToken.data
         }})
         let image = await Image.findOne({raw:true, where:{ user_id:decodedToken.data}})   
-        message = {email, firstName, lastName, nick_name,url:image.url};
+        message = {email, firstName, lastName, nick_name,url:image?.url};
         } catch(e) {
             console.log("Profile service",e);
             message = {error: "token expired"};
