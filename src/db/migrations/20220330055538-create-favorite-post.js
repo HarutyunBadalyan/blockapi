@@ -12,6 +12,7 @@ module.exports = {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 foreignKey: true,
+                onDelete:"cascade",
                 references: {
                     model: "Users",
                     key: "id"
@@ -21,6 +22,7 @@ module.exports = {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 foreignKey: true,
+                onDelete:"cascade",
                 references: {
                     model: "Posts",
                     key: "id"
