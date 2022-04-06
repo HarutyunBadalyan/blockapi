@@ -6,7 +6,8 @@ class PostController {
 
         const {title, subtitle, description} = ctx.request.body;
         const user_id = ctx.state.user.id;
-        ctx.body = await PostService.createPost(user_id, title, subtitle, description)
+        ctx.body = await PostService.createPost(user_id, title, subtitle,description, ctx.request.files.avatar)
+        
     };
 
     static async getAllPosts(ctx) {
@@ -33,8 +34,7 @@ class PostController {
     };
 
     static async deletePost(ctx) {
-        // const id = ctx.state.user.id;
-        const id = +ctx.query.id;
+         const id = ctx.state.user.id;
         const post_id = ctx.query.post_id;
         ctx.body = await PostService.deletePost(id, post_id)
     }

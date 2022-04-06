@@ -60,5 +60,28 @@ class EditValidation {
             let profilePictureValidation = compose(validationArray);
              return profilePictureValidation;
     }
+    static postPictureValidation() {
+        const validationArray = [
+           koaBody,
+            (ctx, next) => {
+                console.log("post picture")
+                if(!ctx.request.files.avatar) {
+                    return next();
+                }
+                if(ctx.request.files.avatar.size > 6000000) {
+                    ctx.body = {error:"file max size"}
+                    return;
+                }
+                if(!ctx.request.files.avatar.type.includes('image')) {
+                    ctx.body = {error:"invalid image type"};
+                    return;
+                } 
+                  return  next()
+                
+                
+            }];
+            let postPictureValidation = compose(validationArray);
+             return postPictureValidation;
+    }
 }
 module.exports = EditValidation;
