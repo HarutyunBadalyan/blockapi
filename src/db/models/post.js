@@ -22,7 +22,9 @@ Post.init({
     title: DataTypes.STRING,
     subtitle: DataTypes.STRING,
     description: DataTypes.STRING,
-    user_id: DataTypes.INTEGER
+    user_id: DataTypes.INTEGER,
+    image_url:DataTypes.STRING,
+    public_id:DataTypes.STRING
 }, {
     sequelize,
     modelName: 'Post',
