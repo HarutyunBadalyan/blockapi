@@ -18,7 +18,7 @@ class Image extends Model {
 Image.init({
     user_id: DataTypes.INTEGER,
     url: DataTypes.STRING,
-    public_id: DataTypes.INTEGER
+    public_id: DataTypes.STRING
 }, {
     sequelize,
     modelName: 'Image',
