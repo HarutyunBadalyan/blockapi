@@ -15,9 +15,8 @@ class EditValidation {
             ctx.body = result.results;
         }
     ];
-    
-    let editValidationMiddleware = compose(validationArray);
-    return editValidationMiddleware;
+
+    return compose(validationArray);
     }
     static resetPasswordValidation() {
         const validationArray = [
@@ -38,8 +37,7 @@ class EditValidation {
             }
             ctx.body = result.results;
         }];
-        let editValidationMiddleware = compose(validationArray);
-         return editValidationMiddleware;
+        return compose(validationArray);
     }
     static profilePictureValidation() {
         const validationArray = [
@@ -57,8 +55,7 @@ class EditValidation {
                 
                 
             }];
-            let profilePictureValidation = compose(validationArray);
-             return profilePictureValidation;
+        return compose(validationArray);
     }
     static postPictureValidation() {
         const validationArray = [
@@ -80,8 +77,7 @@ class EditValidation {
                 
                 
             }];
-            let postPictureValidation = compose(validationArray);
-             return postPictureValidation;
+        return compose(validationArray);
     }
 }
 module.exports = EditValidation;

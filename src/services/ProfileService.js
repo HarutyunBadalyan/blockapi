@@ -5,7 +5,7 @@ const User = require("../db/models/user");
 const Image = require("../db/models/image")
 const fs = require("fs/promises")
 const PictureFile = require("../utils/fileuploadanddelete");
-console.log("this will be removed")
+
 
 class ProfileService {
     static async get(token) {
@@ -99,7 +99,6 @@ class ProfileService {
             const {path, name, type} = ctx.request.files.avatar
             let fileBuffer = await fs.readFile(path);
             let response = await PictureFile.upload(fileBuffer);
-           // console.log("response cloudinary", response);
             await Image.create({url:response.url, user_id: decodedToken.data, public_id: response.public_id})
            message = {msg: "success"};
         } catch(e) {

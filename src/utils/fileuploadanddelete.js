@@ -14,7 +14,7 @@ class PictureFile {
                     folder: "foo"
                 },
                 function (error, result) {
-                    //console.log(error,result)
+
                     if (error) {
                         reject(error);
                     }

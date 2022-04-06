@@ -44,7 +44,6 @@ class FavoritePostService {
     };
 
     static async deleteFavPost(user_id, post_id) {
-        console.log(665)
         return (await FavPost.destroy({
                 where: {
                     user_id: user_id,

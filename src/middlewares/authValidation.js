@@ -15,9 +15,8 @@ class AuthValidation {
                 ctx.body = result.results;
             }
         ];
-        
-        let loginValidationMiddleware = compose(validationArray);
-        return loginValidationMiddleware;
+
+        return compose(validationArray);
     }
     static registerValidation() {
         const validationArray = [
@@ -42,9 +41,8 @@ class AuthValidation {
                 ctx.body = result.results;
             }
         ];
-        
-        let registerValidationMiddleware = compose(validationArray);
-        return registerValidationMiddleware;
+
+        return compose(validationArray);
 
     }
 
