@@ -43,14 +43,29 @@ class CommentService {
         }
     };
 
-    static async deleteComment(id, user_id) {
+    static async deleteComment(id) {
 
-        await Comment.destroy({
-            where: {
-                id: id,
-                user_id: user_id
-            }
-        });
+        await Comment.sequelize.query(`DELETE
+            FROM Comments
+            WHERE id IN (
+                WITH recursive all_comments (id, parentid, root_id) AS (
+                    SELECT t1.id,
+                           t1.parent_id as parentid,
+                           t1.id        as root_id
+                    FROM Comments t1
+            
+                    UNION ALL
+            
+                    SELECT c1.id,
+                           c1.parent_id AS parentid,
+                           p.root_id
+                    FROM Comments c1
+                             JOIN all_comments p ON p.id = c1.parent_id
+                )
+                SELECT id
+                FROM all_comments ap
+                WHERE root_id = ${id}
+            )`);
         return {
             msg: " Deleted !"
         }

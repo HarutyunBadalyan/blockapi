@@ -33,8 +33,7 @@ class PostController {
     };
 
     static async deletePost(ctx) {
-        // const id = ctx.state.user.id;
-        const id = +ctx.query.id;
+        const id = ctx.state.user.id;
         const post_id = ctx.query.post_id;
         ctx.body = await PostService.deletePost(id, post_id)
     }

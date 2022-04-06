@@ -15,7 +15,7 @@ class CommentController {
     static async getComment(ctx) {
 
         const post_id = ctx.query.post_id;
-        const parent_id = ctx.query.parent_id;
+        const parent_id = ctx.query.parent_id || 0;
         ctx.body = await CommentService.getComment(post_id,parent_id)
     };
 
@@ -31,8 +31,7 @@ class CommentController {
     static async deleteComment(ctx) {
 
         const id = ctx.query.id;
-        const user_id = ctx.state.user_id;
-        ctx.body = await CommentService.deleteComment(id, user_id)
+        ctx.body = await CommentService.deleteComment(id)
     }
 }
 
