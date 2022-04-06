@@ -23,7 +23,7 @@ module.exports = {
         allowNull: false,
       },
       public_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       createdAt: {

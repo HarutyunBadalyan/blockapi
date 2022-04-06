@@ -1,6 +1,6 @@
 const compose = require('koa-compose');
 const {body, validationResults} = require("koa-req-validation");
-
+const koaBody = require('koa-body')({multipart: true, uploadDir: '.'})
 class EditValidation {
     static profile() {
         const validationArray = [
@@ -40,6 +40,25 @@ class EditValidation {
         }];
         let editValidationMiddleware = compose(validationArray);
          return editValidationMiddleware;
+    }
+    static profilePictureValidation() {
+        const validationArray = [
+           koaBody,
+            (ctx, next) => {
+                if(ctx.request.files.avatar.size > 6000000) {
+                    ctx.body = {error:"file max size"}
+                    return;
+                }
+                if(!ctx.request.files.avatar.type.includes('image')) {
+                    ctx.body = {error:"invalid image type"};
+                    return;
+                } 
+                  return  next()
+                
+                
+            }];
+            let profilePictureValidation = compose(validationArray);
+             return profilePictureValidation;
     }
 }
 module.exports = EditValidation;

@@ -16,6 +16,13 @@ class ProfileController {
         let token = ctx.params.id
         ctx.body  = await ProfileService.verifyPassword(token)
     }
+    static async profilePictureSave(ctx) {
+
+        ctx.body = await ProfileService.profilePictureSave(ctx);;
+    }
+    static async profilePictureDelete(ctx) {
+        ctx.body = await ProfileService.profilePictureDelete(ctx)
+    }
 }
 
 module.exports = ProfileController;

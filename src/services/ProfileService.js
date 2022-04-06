@@ -2,7 +2,9 @@ const {Tokens}  = require("../utils/tokens");
 const {Password} = require("../utils/compareandhashpassword");
 const {SendMail} = require("../utils/sendemail");
 const User = require("../db/models/user");
-
+const Image = require("../db/models/image")
+const fs = require("fs/promises")
+const PictureFile = require("../utils/fileuploadanddelete");
 console.log("this will be removed")
 
 class ProfileService {
@@ -89,7 +91,41 @@ class ProfileService {
         }
     
     }
+    static async profilePictureSave(ctx) {
+        let message = {};
+        try {
+            let decodedToken = Tokens.decodeAccessToken(ctx.header["x-access-token"]);
+            const {path, name, type} = ctx.request.files.avatar
+            let fileBuffer = await fs.readFile(path);
+            let response = await PictureFile.upload(fileBuffer);
+           // console.log("response cloudinary", response);
+            await Image.create({url:response.url, user_id: decodedToken.data, public_id: response.public_id})
+           message = {msg: "success"};
+        } catch(e) {
+            console.log("profile picture",e)
+            message = {error: e}
+        } finally {
+            return message;
+        }
 
+    }
+    static async profilePictureDelete(ctx) {
+        let message = {};
+        try {
+            let decodedToken = Tokens.decodeAccessToken(ctx.header["x-access-token"]);
+            const image = await Image.findOne({raw:true})
+            let response = await PictureFile.delete(image.public_id);
+            const deletedImage = await Image.destroy({where:{id: image.id}})
+            console.log(response);
+           message = {msg: "success"};
+        } catch(e) {
+            console.log("profile picture delete",e)
+            message = {error: e}
+        } finally {
+            return message;
+        }
+
+    }
 }
 
 module.exports = ProfileService;
