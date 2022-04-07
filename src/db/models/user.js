@@ -2,6 +2,7 @@ const sequelize = require("../../connections/db_connection");
 const {DataTypes} = require("sequelize")
 const Post = require("./post")
 const Image = require("./image")
+const Comments = require("./comment")
 const Favorite_post = require("./favorite_post");
 
 const {

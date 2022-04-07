@@ -15,7 +15,7 @@ class CommentService {
 
     static async getComment(post_id, parent_id) {
 
-        const [value, metadata] = await Comment.sequelize.query(`WITH RECURSIVE comments_cte (id,path,text,post_id,user_id
+        const [value, metadata] = await Comment.sequelize.query(`WITH RECURSIVE comments_cte (comment_id,path,text,post_id,user_id
             ) AS (
             SELECT id,'0',text,post_id,user_id
             FROM Comments
@@ -23,10 +23,12 @@ class CommentService {
             UNION ALL
             SELECT r.id,concat(path, '/', r.parent_id),r.text,r.post_id,r.user_id
             FROM Comments r
-                JOIN comments_cte ON comments_cte.id = r.parent_id
+                JOIN comments_cte ON comments_cte.comment_id = r.parent_id
                 )
-            SELECT id, path, text, post_id, user_id
-            FROM comments_cte where post_id=${post_id}`);
+            SELECT comment_id, path, text, post_id, user_id, "Users".nick_name
+            FROM comments_cte
+              join "Users" on "Users".id = comments_cte.user_id
+             where post_id=${post_id}`)
         return value
     };
 

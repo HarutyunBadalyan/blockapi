@@ -33,4 +33,5 @@ Post.init({
 Post.hasMany(Comments, {foreignKey: "post_id"})
 Post.hasMany(Favorite_post, {foreignKey: "post_id"})
 
+
 module.exports = Post
