@@ -6,11 +6,12 @@ const commentRouter = require("./CommentRouter");
 const favPostRouter = require("./FavoritePostRouter")
 const authorRouter = require("./AuthorRoute");
 const searchRouter = require("./SearchRouter");
-
+const forgetPasswodRouter = require("./ForgetePasswordRouter");
 const Auth = require("../middlewares/auth");
 const router = new Router();
 
 router.use(authRouter.routes());
+router.use(forgetPasswodRouter.routes())
 router.use(Auth);
 router.use(postRouter.routes());
 router.use(profileRouter.routes());
