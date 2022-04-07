@@ -8,16 +8,11 @@ class Tokens {
         return jwt.verify(token, privateKey);
     }
     static accessTokenEncode(data, time)  {
-        return jwt.sign({data: data}, privateKey, {expiresIn: time || 3600});
+        return jwt.sign({data: data}, privateKey, {expiresIn: time || 86400});
     }
     static decodeAccessToken(token) {
         return jwt.verify(token, privateKey);
     }
-    static refreshTokenEncode(data, time)  {
-        return jwt.sign({data: data}, privateKey, {expiresIn: time || 86400});
-    }
-    static decodeRefreshToken(token) {
-        return jwt.verify(token, privateKey);
-    }
+
 }
 module.exports = {Tokens};

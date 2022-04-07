@@ -52,11 +52,9 @@ class AuthService {
 
             if (user.authenticated === true) {
                 const token = await Tokens.accessTokenEncode(user.id);
-                const refreshToken = await Tokens.refreshTokenEncode(user.id);
 
                 message = {
                     access_token: token,
-                    refresh_token: refreshToken,
                     msg: "User successfully logged in!"
                 }
             } else {
