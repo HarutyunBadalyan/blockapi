@@ -79,5 +79,17 @@ class EditValidation {
             }];
         return compose(validationArray);
     }
+    static sendVerificationValidation(){
+        const validationArray = [
+            body("email").isEmail().withMessage("Invalid Email").build(),
+            (ctx, next) => {
+                const result = validationResults(ctx);
+                if(!result.results.length) {
+                    return next();
+                }
+                ctx.body = result.results;
+            }];
+            return compose(validationArray);
+    }
 }
 module.exports = EditValidation;
