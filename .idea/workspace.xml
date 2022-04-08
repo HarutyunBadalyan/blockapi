@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="927d180c-c370-49fb-aed2-28fd65f3c000" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db/models/post.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/models/post.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db/models/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/models/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/CommentService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/CommentService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/AuthService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/AuthService.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/PostService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/PostService.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -74,6 +72,7 @@
       <updated>1648557875952</updated>
       <workItem from="1648557877070" duration="22448000" />
       <workItem from="1649240197764" duration="11464000" />
+      <workItem from="1649396958395" duration="1801000" />
     </task>
     <task id="LOCAL-00001" summary="Register flow">
       <created>1648632258597</created>

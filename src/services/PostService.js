@@ -29,46 +29,56 @@ class PostService {
 
     static async getAllPost(limit, offset) {
 
-        const [value, metadata] = await Post.sequelize.query(`SELECT "Posts".id,
-                   title,
-                   subtitle,
-                   description,
-                   image_url,
-                   nick_name,
-                   "createdAt",
-                   c.text,
-                   c.parent_id,
-                   c.post_id,
-                   c.comment_author
-            FROM "Posts"
-                     JOIN (select nick_name, id from "Users") as u ON u.id = "Posts".user_id
-                     JOIN (select nick_name as comment_author, text, post_id, parent_id, user_id
-                           from comments
-                                    right join "Users" u on comments.user_id = u.id) as c on "Posts".user_id = c.user_id 
-             order by "createdAt" desc  limit ${limit} offset ${offset}`)
+        const [value, metadata] = await Post.sequelize.query(`WITH commentsUsers AS (
+                        SELECT json_agg(json_build_object('commentsId', c.id, 'userId', c.user_id, 'userName', u."firstName", 'text',
+                                                          c.text, 'time', c."createdAt")),
+                               c.post_id
+                        FROM comments c
+                                 LEFT JOIN "Users" U ON U.id = c.user_id
+                        GROUP BY post_id
+                    )
+                    SELECT p.id as "postId",
+                           p.user_id,
+                           p.title,
+                           p.subtitle,
+                           p.description,
+                           p.image_url,
+                           p."createdAt",
+                           U."firstName",
+                           cU.*
+                    FROM "Posts" P
+                             LEFT JOIN "Users" U on U.id = P.user_id
+                             LEFT JOIN commentsUsers cU on P.id = cU.post_id
+                    order by "createdAt" desc
+                    limit ${limit} offset ${offset} `)
         return value
     }
 
     static async getAllMyPost(id, limit, offset) {
 
-        const [value,metadata] = await Post.sequelize.query(`SELECT "Posts".id,
-                   title,
-                   subtitle,
-                   description,
-                   image_url,
-                   "Posts".user_id,
-                   nick_name,
-                   "createdAt",
-                   c.text,
-                   c.parent_id,
-                   c.post_id,
-                   c.comment_author
-            FROM "Posts"
-                     JOIN (select nick_name, id from "Users") as u ON u.id = "Posts".user_id
-                     JOIN (select nick_name as comment_author, text, post_id, parent_id, user_id
-                           from comments
-                                    right join "Users" u on comments.user_id = u.id) as c on "Posts".user_id = c.user_id 
-             where "Posts".user_id = ${id} order by "createdAt" desc  limit ${limit} offset ${offset} `)
+        const [value, metadata] = await Post.sequelize.query(`WITH commentsUsers AS (
+                       SELECT json_agg(json_build_object('commentsId', c.id, 'userId', c.user_id, 'userName', u."firstName", 'text',
+                                                         c.text, 'time', c."createdAt")),
+                              c.post_id
+                       FROM comments c
+                                LEFT JOIN "Users" U ON U.id = c.user_id
+                       GROUP BY post_id
+                   )
+                   SELECT p.id as "postId",
+                          p.user_id,
+                          p.title,
+                          p.subtitle,
+                          p.description,
+                          p.image_url,
+                          p."createdAt",
+                          U."firstName",
+                          cU.*
+                   FROM "Posts" P
+                            LEFT JOIN "Users" U on U.id = P.user_id
+                            LEFT JOIN commentsUsers cU on P.id = cU.post_id
+                   where user_id = ${id}
+                   order by "createdAt" desc
+                   limit ${limit} offset ${offset} `)
         return value
     };
 
