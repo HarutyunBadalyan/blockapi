@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="927d180c-c370-49fb-aed2-28fd65f3c000" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/AuthService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/AuthService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/PostService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/PostService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/tokens.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/tokens.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +71,7 @@
       <updated>1648557875952</updated>
       <workItem from="1648557877070" duration="22448000" />
       <workItem from="1649240197764" duration="11464000" />
-      <workItem from="1649396958395" duration="1801000" />
+      <workItem from="1649396958395" duration="2750000" />
     </task>
     <task id="LOCAL-00001" summary="Register flow">
       <created>1648632258597</created>
@@ -193,7 +192,14 @@
       <option name="project" value="LOCAL" />
       <updated>1649243936346</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="query">
+      <created>1649407172640</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1649407172640</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -213,6 +219,7 @@
     <MESSAGE value="delete comment" />
     <MESSAGE value="delete cascade" />
     <MESSAGE value="delete logs" />
-    <option name="LAST_COMMIT_MESSAGE" value="delete logs" />
+    <MESSAGE value="query" />
+    <option name="LAST_COMMIT_MESSAGE" value="query" />
   </component>
 </project>
