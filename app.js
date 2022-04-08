@@ -7,8 +7,10 @@ const app = new Koa();
 const koaBody = require("koa-body");
 const cors = require('koa2-cors');
 const serve = require('koa-static')
-const mount = require("koa-mount");
-const static_pages = new Koa();
+const Router = require('koa-router');
+const send = require('koa-send');
+
+const static_pages = new Router();
 app.use(koaBody());
 app.use(cors({origin:"*"}))
 
@@ -16,10 +18,18 @@ app.use(router.routes());
 
 
 
-static_pages.use(serve(__dirname + "/build"));
-app.use(mount('/', static_pages));
-app.use(mount('/register', static_pages));
-app.use(mount('/profile', static_pages));
+app.use(serve( "./build"));
+static_pages.get("(.*)", async (ctx, next) => {
+    try {
+      console.log('sdfsdf')
+      await send(ctx, './build/index.html');
+    } catch(err) {
+      console.log(err)
+      // TODO: handle err?
+      return next();
+    }
+  });
+  app.use(static_pages.routes())
 sequelize.authenticate().then(() => {
     console.log('Database connected successfully!');
 }).catch(err => {
