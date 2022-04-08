@@ -82,7 +82,7 @@ class AuthService {
 
         } catch (e) {
             console.log("verifyusererror", e);
-            message = {msg: "token expired"};
+            message = {error: "token expired"};
         } finally {
             return message;
         }
