@@ -21,7 +21,7 @@ class Post extends Model {
 Post.init({
     title: DataTypes.STRING,
     subtitle: DataTypes.STRING,
-    description: DataTypes.STRING,
+    description: DataTypes.TEXT,
     user_id: DataTypes.INTEGER,
     image_url:DataTypes.STRING,
     public_id:DataTypes.STRING
