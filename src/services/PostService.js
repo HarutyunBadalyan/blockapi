@@ -31,7 +31,7 @@ class PostService {
 
         const [value, metadata] = await Post.sequelize.query(`WITH commentsUsers AS (
                         SELECT json_agg(json_build_object('commentsId', c.id, 'userId', c.user_id, 'userName', u."firstName", 'text',
-                                                          c.text, 'time', c."createdAt")),
+                                                          c.text, 'time', c."createdAt")) comments,
                                c.post_id
                         FROM comments c
                                  LEFT JOIN "Users" U ON U.id = c.user_id
@@ -58,7 +58,7 @@ class PostService {
 
         const [value, metadata] = await Post.sequelize.query(`WITH commentsUsers AS (
                        SELECT json_agg(json_build_object('commentsId', c.id, 'userId', c.user_id, 'userName', u."firstName", 'text',
-                                                         c.text, 'time', c."createdAt")),
+                                                         c.text, 'time', c."createdAt")) comments,
                               c.post_id
                        FROM comments c
                                 LEFT JOIN "Users" U ON U.id = c.user_id
