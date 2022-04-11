@@ -8,9 +8,10 @@ class FavoritePostController {
     };
 
     static async getFavPost(ctx) {
-        const user_id = ctx.state.user_id
+        const user_id = ctx.state.user.id
         const limit = ctx.query.limit || 10;
         const {offset} = ctx.query || 0;
+        console.log(user_id)
         ctx.body = await FavoritePostService.getFavPost(user_id, limit, offset)
     };
 

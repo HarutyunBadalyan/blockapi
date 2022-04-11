@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="927d180c-c370-49fb-aed2-28fd65f3c000" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routers/PostRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routers/PostRouter.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routers/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +70,7 @@
       <updated>1648557875952</updated>
       <workItem from="1648557877070" duration="22448000" />
       <workItem from="1649240197764" duration="11464000" />
-      <workItem from="1649396958395" duration="12875000" />
+      <workItem from="1649396958395" duration="14222000" />
     </task>
     <task id="LOCAL-00001" summary="Register flow">
       <created>1648632258597</created>
@@ -221,7 +219,14 @@
       <option name="project" value="LOCAL" />
       <updated>1649427384036</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="AUTH POST">
+      <created>1649662310595</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1649662310595</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -244,6 +249,7 @@
     <MESSAGE value="query" />
     <MESSAGE value="token time" />
     <MESSAGE value="post text" />
-    <option name="LAST_COMMIT_MESSAGE" value="post text" />
+    <MESSAGE value="AUTH POST" />
+    <option name="LAST_COMMIT_MESSAGE" value="AUTH POST" />
   </component>
 </project>
