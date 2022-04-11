@@ -12,8 +12,8 @@ const router = new Router();
 
 router.use(authRouter.routes());
 router.use(forgetPasswodRouter.routes())
-router.use(Auth);
 router.use(postRouter.routes());
+router.use(Auth);
 router.use(profileRouter.routes());
 router.use(commentRouter.routes());
 router.use(favPostRouter.routes());
