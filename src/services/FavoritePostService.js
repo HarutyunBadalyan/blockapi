@@ -31,10 +31,11 @@ class FavoritePostService {
         const [value, metadata] = await FavPost.sequelize.query(`SELECT "favorite_posts"."user_id",
                     "favorite_posts"."post_id",
                     "Posts"."title",
-                    "Users"."firstName" as "postAuthor",
-                    "Users"."lastName" as "postAuthorLast",
+                    "Users"."firstName" ,
+                    "Users"."lastName" ,
                     "Posts"."subtitle",
                     "Posts"."description",
+                    "Posts"."image_url",
                     "comments"."text"      AS "Comment_text",
                     "comments"."parent_id" AS "Comment_parent_id",
                     "Posts"."createdAt"
