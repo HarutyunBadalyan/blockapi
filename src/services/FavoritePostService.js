@@ -31,6 +31,8 @@ class FavoritePostService {
         const [value, metadata] = await FavPost.sequelize.query(`SELECT "favorite_posts"."user_id",
                     "favorite_posts"."post_id",
                     "Posts"."title",
+                    "Users"."firstName" as "postAuthor",
+                    "Users"."lastName" as "postAuthorLast",
                     "Posts"."subtitle",
                     "Posts"."description",
                     "comments"."text"      AS "Comment_text",
@@ -38,6 +40,7 @@ class FavoritePostService {
                     "Posts"."createdAt"
                         FROM "favorite_posts"
                                  LEFT JOIN "Posts" ON "favorite_posts"."post_id" = "Posts"."id"
+                                 LEFT JOIN "Users" ON "favorite_posts"."user_id" = "Users"."id"
                                  left JOIN "comments" ON "favorite_posts"."post_id" = "comments"."post_id"
                         WHERE "favorite_posts"."user_id" = ${user_id} LIMIT ${limit} OFFSET ${offset}`)
         return value
