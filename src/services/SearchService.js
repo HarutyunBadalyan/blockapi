@@ -7,11 +7,19 @@ class SearchService {
         const lowerCaseQueries = queries.toLowerCase()
         if (tableName === "Posts") {
 
-            value = Post.sequelize.query(`SELECT *
-            FROM "Posts"
-            WHERE  LOWER("title") LIKE '%${lowerCaseQueries}%'
-               OR  LOWER("subtitle") LIKE '%${lowerCaseQueries}%'
-            GROUP BY "id"`)
+            value  = Post.sequelize.query(`SELECT p.id as "postId",
+                       p.user_id,
+                       p.title,
+                       p.subtitle,
+                       p.description,
+                       p.image_url,
+                       p."createdAt",
+                       U."firstName"
+                FROM "Posts" P
+                         LEFT JOIN "Users" U on U.id = P.user_id
+                WHERE LOWER("title") LIKE '%${lowerCaseQueries}%'
+                   OR LOWER("subtitle") LIKE '%${lowerCaseQueries}%'
+                GROUP BY P."id",U."firstName"`)
 
         } else {
 
