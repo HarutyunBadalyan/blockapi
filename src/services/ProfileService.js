@@ -117,7 +117,7 @@ class ProfileService {
         let message = {};
         try {
             let decodedToken = Tokens.decodeAccessToken(ctx.header["x-access-token"]);
-            const image = await Image.findOne({raw:true})
+            const image = await Image.findOne({raw:true, where:{user_id:decodedToken.data}})
             let response = await PictureFile.delete(image.public_id);
             const deletedImage = await Image.destroy({where:{id: image.id}})
             console.log(response);
