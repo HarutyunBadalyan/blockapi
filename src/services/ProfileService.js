@@ -99,6 +99,10 @@ class ProfileService {
             const {path, name, type} = ctx.request.files.avatar
             let fileBuffer = await fs.readFile(path);
             let response = await PictureFile.upload(fileBuffer);
+            const img = await Image.findOne({where:{user_id:decodedToken.data}})
+            if(img){
+                await Image.destroy({where: {user_id:decodedToken.data}})
+            }
             await Image.create({url:response.url, user_id: decodedToken.data, public_id: response.public_id})
            message = {msg: "success"};
         } catch(e) {
