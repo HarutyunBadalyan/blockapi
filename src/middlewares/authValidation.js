@@ -12,7 +12,7 @@ class AuthValidation {
                 if (!result.results.length) {
                     return next();
                 }
-                ctx.body = result.results;
+                ctx.body ={error: result.results};
             }
         ];
 
@@ -38,7 +38,7 @@ class AuthValidation {
                 if(!result.results.length) {
                     return next();
                 }
-                ctx.body = result.results;
+                ctx.body = {error:result.results};
             }
         ];
 
