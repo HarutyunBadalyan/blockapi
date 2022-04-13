@@ -2,7 +2,7 @@ const FavoritePostService = require("../services/FavoritePostService")
 class FavoritePostController {
 
     static async addFavPost(ctx) {
-        const user_id = ctx.state.user_id
+        const user_id = ctx.state.user.id
         const post_id = +ctx.query.post_id;
         ctx.body = await FavoritePostService.addFavPost(user_id, post_id)
     };
@@ -16,7 +16,7 @@ class FavoritePostController {
     };
 
     static  async deleteFavPost(ctx) {
-        const user_id = ctx.state.user_id
+        const user_id = ctx.state.user.id
         const post_id = ctx.query.post_id;
         ctx.body = await FavoritePostService.deleteFavPost(user_id, post_id)
     }
