@@ -12,11 +12,11 @@ class ProfileService {
         let message = {};
         try {
         let decodedToken = Tokens.decodeAccessToken(token);
-        let {email, firstName, lastName, nick_name} = await User.findOne({raw:true, where:{
+        let {email, firstName, lastName, nick_name,id} = await User.findOne({raw:true, where:{
             id:decodedToken.data
         }})
         let image = await Image.findOne({raw:true, where:{ user_id:decodedToken.data}})   
-        message = {email, firstName, lastName, nick_name,url:image?.url};
+        message = {email, firstName, lastName, nick_name,url:image?.url,id};
         } catch(e) {
             console.log("Profile service",e);
             message = {error: "token expired"};
