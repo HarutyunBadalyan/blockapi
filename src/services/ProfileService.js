@@ -101,6 +101,7 @@ class ProfileService {
             let response = await PictureFile.upload(fileBuffer);
             const img = await Image.findOne({where:{user_id:decodedToken.data}})
             if(img){
+                await PictureFile.delete(img.public_id);
                 await Image.destroy({where: {user_id:decodedToken.data}})
             }
             await Image.create({url:response.url, user_id: decodedToken.data, public_id: response.public_id})
